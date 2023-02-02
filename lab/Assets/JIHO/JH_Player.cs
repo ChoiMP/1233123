@@ -7,11 +7,12 @@ public class JH_Player : MonoBehaviour
     Rigidbody rb;
 
     //Move()
-    public float moveSpeed;
+    [SerializeField] float moveSpeed;
 
     //Jump()
-    public float jumpPower;
-    public float JumpCheckLen;
+    [SerializeField] float jumpPower;
+    public GameObject JumpCheck;
+    [SerializeField] float JumpCheckLen;
 
     Vector3 lookVector;
 
@@ -50,26 +51,37 @@ public class JH_Player : MonoBehaviour
 
     private void Jump()
     {
-       if(rb.velocity.y<0.2&&rb.velocity.y>-0.2f)
+
+
+         int layerMask = 1 << LayerMask.NameToLayer("Ground");
+         Debug.DrawRay(transform.position, Vector3.down * JumpCheckLen, Color.red);
+         if (Physics.Raycast(transform.position, Vector3.down, JumpCheckLen, layerMask))
+         {
+             print("점프 가능");
+             if (Input.GetKeyDown(KeyCode.C))
+             {
+                 rb.AddForce(Vector3.up * jumpPower);
+             }
+
+         }
+
+        //int layerMask = 1 << LayerMask.NameToLayer("Ground");
+/*        if (Physics.BoxCast(JumpCheck.transform.position, new Vector3(1,0.2f,1), Vector3.down, out RaycastHit hit, transform.rotation, 0))
         {
-
-            int layerMask = 1 << LayerMask.NameToLayer("Ground");
-            Debug.DrawRay(transform.position, Vector3.down * JumpCheckLen, Color.red);
-            if (Physics.Raycast(transform.position, Vector3.down, JumpCheckLen, layerMask))
+            print("점프 가능");
+            if (Input.GetKeyDown(KeyCode.C))
             {
-
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    rb.AddForce(Vector3.up * jumpPower);
-                }
-
+                rb.AddForce(Vector3.up * jumpPower);
             }
-
-        }
-
-
-
-
+        }*/
 
     }
+
+/*    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(JumpCheck.transform.position, new Vector3(1, 0.2f, 1));
+
+
+    }*/
 }
