@@ -5,7 +5,11 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
+<<<<<<< HEAD
+      ticks: 638109169497233948
+=======
       ticks: 638109189157260852
+>>>>>>> JY
     m_Hash: 4133408850
   m_LockFileStatus:
     m_FilePath: C:/Users/PCU/git/1233123/lab/Packages/packages-lock.json
@@ -13,7 +17,11 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
+<<<<<<< HEAD
+      ticks: 638109169497313733
+=======
       ticks: 638109189157310849
+>>>>>>> JY
     m_Hash: 3357840477
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
@@ -25,7 +33,11 @@ m_PackageAssets:
       isDirectDependency: 1
       version: 2.6.17
       source: 1
+<<<<<<< HEAD
+      resolvedPath: C:\Users\USER\Desktop\git\1233123\lab\Library\PackageCache\com.unity.cinemachine@2.6.17
+=======
       resolvedPath: C:\Users\PCU\git\1233123\lab\Library\PackageCache\com.unity.cinemachine@2.6.17
+>>>>>>> JY
       assetPath: Packages/com.unity.cinemachine
       name: com.unity.cinemachine
       displayName: Cinemachine
