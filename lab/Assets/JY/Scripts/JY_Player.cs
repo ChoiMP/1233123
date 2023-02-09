@@ -8,7 +8,7 @@ public class JY_Player : MonoBehaviour
     Rigidbody rb;
     BoxCollider boxCollider;
     Vector3 startPos;
-
+    public Item item;
     public Text curCoinText;
     private float curCoin;
     //public enum State { Idle, Walk, Freeze, rope, Dead };
@@ -26,7 +26,7 @@ public class JY_Player : MonoBehaviour
     public GameObject JumpCheck;
     [SerializeField] float JumpCheckLen;
 
-    Vector3 lookVector;
+    public Vector3 lookVector;
 
     float h;
     float v;
@@ -42,6 +42,7 @@ public class JY_Player : MonoBehaviour
     {
         Jump();
         InputKey();
+        if (Input.GetKeyDown(KeyCode.Z)) this.UseItem();
     }
 
     private void FixedUpdate()
@@ -58,7 +59,7 @@ public class JY_Player : MonoBehaviour
         Debug.DrawRay(transform.position, Vector3.down * JumpCheckLen, Color.red);
         if (Physics.Raycast(transform.position, Vector3.down, JumpCheckLen, layerMask))
         {
-            print("점프 가능");
+            //print("점프 가능");
             if (Input.GetKeyDown(KeyCode.C))
             {
                 rb.AddForce(Vector3.up * jumpPower);
@@ -93,7 +94,7 @@ public class JY_Player : MonoBehaviour
 
         if (h != 0 || v != 0)
         {
-            lookVector = new Vector3(h, v).normalized;
+            lookVector = new Vector3(h, v).normalized*1.5f;
         }
 
         if (state == State.Idle || state == State.Walk)
@@ -107,6 +108,11 @@ public class JY_Player : MonoBehaviour
 
     }
 
+    private void UseItem()
+    {
+        // GetComponentInChildren<Item>();
+        item.UseItem(transform.position,lookVector);
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (state == State.Freeze)
