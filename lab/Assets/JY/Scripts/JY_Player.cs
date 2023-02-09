@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class JY_Player : MonoBehaviour
 {
+    bool isTrigger;
+    string collision;
     BoxCollider boxCollider;
     // Start is called before the first frame update
     Rigidbody rb;
@@ -21,53 +23,75 @@ public class JY_Player : MonoBehaviour
     Vector3 startPos;
 
     Vector3 lookVector;
+    enum State
+    {
+        Idle,Rope,iced
+    }
+    State state = State.Idle;
     void Awake()
     {
-        boxCollider = GetComponent<BoxCollider>();
-        rb = GetComponent<Rigidbody>();
+        boxCollider = GetComponentInChildren<BoxCollider>();
+        rb = GetComponentInChildren<Rigidbody>();
         startPos = transform.position;
+        
     }
 
     void Update()
     {
-        Jump();
+        InputManager();
     }
     // Update is called once per frame
     void FixedUpdate()
+    {   
+        
+    }
+    private void InputManager()
     {
-        float h = Input.GetAxis("Horizontal");        // 가로축
+        if (state == State.iced) return;
         float v = Input.GetAxis("Vertical");          // 세로축
-        Move(h);
-        Sit(v);
-    }
-    private void Move(float h)
-    {
-        transform.position += new Vector3(h, 0, 0) * moveSpeed * Time.deltaTime;
-    }
-
-    private void Jump()
-    {
-        if (rb.velocity.y < 0.2 && rb.velocity.y > -0.2f)
+        if (state == State.Rope)
         {
-
-            int layerMask = 1 << LayerMask.NameToLayer("Ground");
-            Debug.DrawRay(transform.position, Vector3.down * JumpCheckLen, Color.red);
-            if (Physics.Raycast(transform.position, Vector3.down, JumpCheckLen, layerMask))
+            Move(0,v);
+        }
+        float h = Input.GetAxis("Horizontal");        // 가로축
+        if (state == State.Idle)
+        {
+            Move(h);
+            Sit(v);
+            if (Input.GetKey(KeyCode.Z)) { }//UseItem();
+            if (Input.GetKeyDown(KeyCode.X) && isTrigger)
             {
-
-                if (Input.GetKeyDown(KeyCode.C))
+                switch (collision)
                 {
-                    rb.AddForce(Vector3.up * jumpPower);
+                    case "Rope":
+                        print("로프 진입");
+                        return;
+                    case "Cannon":
+                        return;
+                    case "Portal":
+                        return;
                 }
 
             }
 
+
+            if (Input.GetKey(KeyCode.C)) Jump();
         }
+        
+    }
+    private void Move(float h, float v = 0)
+    {
+        transform.position += new Vector3(h, v, 0) * moveSpeed * Time.fixedDeltaTime;
+    }
 
-
-
-
-
+    private void Jump()
+    {
+        int layerMask = 1 << LayerMask.NameToLayer("Ground");
+         Debug.DrawRay(transform.position, Vector3.down * JumpCheckLen, Color.red);
+         if (Physics.Raycast(transform.position, Vector3.down, JumpCheckLen, layerMask))
+         {
+            rb.AddForce(Vector3.up * jumpPower* Time.fixedDeltaTime);
+         }
     }
     private void Sit(float v)
     {
@@ -85,12 +109,7 @@ public class JY_Player : MonoBehaviour
             boxCollider.size = new Vector3(1, 2, 1);
         }
     }
-    public void GetCoin(float coin=1)
-    {
-        curCoin += coin;
-        curCoinText.text = "curCoin : " + curCoin;
-    }
-    
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name == "Coin")
@@ -105,13 +124,34 @@ public class JY_Player : MonoBehaviour
             }
             Destroy(collision.gameObject);
         }
-        if (collision.gameObject.tag=="Enemy")
-        { 
-                StartCoroutine(Hit());
-                Destroy(collision.gameObject);
-                return;
+        else if (collision.gameObject.tag == "Enemy")
+        {
+            StartCoroutine(Hit());
+            Destroy(collision.gameObject);
+            return;
         }
+        
 
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        isTrigger = true;
+        this.collision = other.gameObject.name;
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        isTrigger = false;
+        this.collision = null;
+    }
+    private void OnTriggerStay(Collider collision)
+    {
+        
+    }
+
+    public void GetCoin(float coin=1)
+    {
+        curCoin += coin;
+        curCoinText.text = "curCoin : " + curCoin;
     }
     public IEnumerator Hit()//  피격시 오브젝트 삭제 + 조작 불가 --> 리스폰
     {

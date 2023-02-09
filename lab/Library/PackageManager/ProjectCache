@@ -5,16 +5,26 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
+<<<<<<< Updated upstream
       ticks: 638109189157260852
     m_Hash: 4133408850
+=======
+      ticks: 638109223963816062
+    m_Hash: 1116079589
+>>>>>>> Stashed changes
   m_LockFileStatus:
     m_FilePath: C:/Users/PCU/git/1233123/lab/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
+<<<<<<< Updated upstream
       ticks: 638109189157310849
     m_Hash: 3357840477
+=======
+      ticks: 638109223963816062
+    m_Hash: 1895300000
+>>>>>>> Stashed changes
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_PackageAssets:
