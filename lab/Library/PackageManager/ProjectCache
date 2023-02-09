@@ -6,8 +6,13 @@ m_ProjectFiles:
     m_ModificationDate:
       serializedVersion: 2
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       ticks: 638109189157260852
     m_Hash: 4133408850
+=======
+      ticks: 638109223963816062
+    m_Hash: 1116079589
+>>>>>>> Stashed changes
 =======
       ticks: 638109223963816062
     m_Hash: 1116079589
@@ -19,8 +24,13 @@ m_ProjectFiles:
     m_ModificationDate:
       serializedVersion: 2
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       ticks: 638109189157310849
     m_Hash: 3357840477
+=======
+      ticks: 638109223963816062
+    m_Hash: 1895300000
+>>>>>>> Stashed changes
 =======
       ticks: 638109223963816062
     m_Hash: 1895300000
@@ -2999,6 +3009,7 @@ m_PackageAssets:
         - 1.5.2
         - 1.6.0
         - 1.7.0
+        - 1.7.1
         compatible:
         - 1.0.1
         - 1.1.0-pre.7
@@ -3018,6 +3029,7 @@ m_PackageAssets:
         - 1.5.2
         - 1.6.0
         - 1.7.0
+        - 1.7.1
         verified: 1.4.3
       dependencies:
       - name: com.unity.modules.unitywebrequest

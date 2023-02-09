@@ -22,12 +22,16 @@ public class JY_Player : MonoBehaviour
 
     Vector3 startPos;
 
+<<<<<<< Updated upstream
     Vector3 lookVector;
     enum State
     {
         Idle,Rope,iced
     }
     State state = State.Idle;
+=======
+    public Vector3 lookVector;
+>>>>>>> Stashed changes
     void Awake()
     {
         boxCollider = GetComponentInChildren<BoxCollider>();
@@ -38,12 +42,33 @@ public class JY_Player : MonoBehaviour
 
     void Update()
     {
+<<<<<<< Updated upstream
         InputManager();
     }
     // Update is called once per frame
     void FixedUpdate()
     {   
         
+=======
+        if (Input.GetKeyDown(KeyCode.C)) Jump();
+        if (Input.GetKeyDown(KeyCode.Z)) UseItem();
+    }
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+        float h = Input.GetAxis("Horizontal");        // 가로축
+        float v = Input.GetAxis("Vertical");          // 세로축
+        Move(h);
+        Sit(v);
+    }
+    private void UseItem()
+    {
+        GetComponentInChildren<Gun>().UseItem();
+    }
+    private void Move(float h)
+    {
+        transform.position += new Vector3(h, 0, 0) * moveSpeed * Time.deltaTime;
+>>>>>>> Stashed changes
     }
     private void InputManager()
     {
@@ -61,6 +86,7 @@ public class JY_Player : MonoBehaviour
             if (Input.GetKey(KeyCode.Z)) { }//UseItem();
             if (Input.GetKeyDown(KeyCode.X) && isTrigger)
             {
+<<<<<<< Updated upstream
                 switch (collision)
                 {
                     case "Rope":
@@ -71,6 +97,11 @@ public class JY_Player : MonoBehaviour
                     case "Portal":
                         return;
                 }
+=======
+
+
+                rb.AddForce(Vector3.up * jumpPower);
+>>>>>>> Stashed changes
 
             }
 
