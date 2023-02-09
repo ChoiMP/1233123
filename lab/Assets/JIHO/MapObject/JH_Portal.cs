@@ -25,7 +25,7 @@ public class JH_Portal : MonoBehaviour
     }
     private void Warp()
     {
-        if(isTokenportal==true)
+        if(isTokenportal==false)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow) && isEnter == true)
             {
