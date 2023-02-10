@@ -51,10 +51,7 @@ public class JH_Player : MonoBehaviour
     }
     private void Move(float h, float v=0)
     {
-
-      
-        // Point 2.
-        transform.position += new Vector3(h, v, 0) * moveSpeed * Time.fixedDeltaTime;
+        transform.Translate(new Vector3(h, v, 0) * moveSpeed * Time.deltaTime);
     }
 
     private void Jump()
@@ -87,11 +84,13 @@ public class JH_Player : MonoBehaviour
 
         h = Input.GetAxis("Horizontal");        // 가로축
         v = Input.GetAxis("Vertical");          // 세로축
-
+        
         if (h != 0 || v != 0)
         {
             lookVector = new Vector3(h, v).normalized;
         }
+        
+       
 
         if (state == State.Idle || state == State.Walk)
         {
