@@ -5,71 +5,83 @@ using UnityEngine.UI;
 
 public class JY_Player : MonoBehaviour
 {
-    BoxCollider boxCollider;
-    // Start is called before the first frame update
+
+
     Rigidbody rb;
-
-    public  Text curCoinText;
-    private float curCoin;
-    //Move()
-    public float moveSpeed;
-
-    //Jump()
-    public float jumpPower;
-    public float JumpCheckLen;
+    BoxCollider boxCollider;
 
     Vector3 startPos;
+    [SerializeField]
+    private Item item;
+    public Text curCoinText;
+    private float curCoin;
+    //public enum State { Idle, Walk, Freeze, rope, Dead };
+    [SerializeField] private State state = State.Idle;
+    public State myState
+    {
+        get { return state; }
+        set { state = value; }
+    }
+    //Move()
+    [SerializeField] float moveSpeed;
 
-    Vector3 lookVector;
+    //Jump()
+    [SerializeField] float jumpPower;
+    public GameObject JumpCheck;
+    [SerializeField] float JumpCheckLen;
+
+    public Vector3 lookVector;
+
+    float h;
+    float v;
+
+    private float itemDelay;
+    private float curDelayTime;
+
     void Awake()
     {
         boxCollider = GetComponent<BoxCollider>();
         rb = GetComponent<Rigidbody>();
         startPos = transform.position;
+        GetItem();
     }
-
+    // Update is called once per frame
     void Update()
     {
         Jump();
-    }
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        float h = Input.GetAxis("Horizontal");        // 가로축
-        float v = Input.GetAxis("Vertical");          // 세로축
-        Move(h);
-        Sit(v);
-    }
-    private void Move(float h)
-    {
-        transform.position += new Vector3(h, 0, 0) * moveSpeed * Time.deltaTime;
-    }
 
+        InputKey();
+        if (Input.GetKeyDown(KeyCode.Z)) this.UseItem();
+        curDelayTime -= Time.deltaTime;
+    }
+    public void GetItem()
+    {
+        //아이템 획득
+        itemDelay=item.Init();
+        
+    }
+    private void FixedUpdate()
+    {
+
+    }
+    private void Move(float h, float v = 0)
+    {
+        transform.position += new Vector3(h, v, 0) * moveSpeed * Time.fixedDeltaTime;
+    }
     private void Jump()
     {
-        if (rb.velocity.y < 0.2 && rb.velocity.y > -0.2f)
+        int layerMask = 1 << LayerMask.NameToLayer("Ground");
+        Debug.DrawRay(transform.position, Vector3.down * JumpCheckLen, Color.red);
+        if (Physics.Raycast(transform.position, Vector3.down, JumpCheckLen, layerMask))
         {
-
-            int layerMask = 1 << LayerMask.NameToLayer("Ground");
-            Debug.DrawRay(transform.position, Vector3.down * JumpCheckLen, Color.red);
-            if (Physics.Raycast(transform.position, Vector3.down, JumpCheckLen, layerMask))
+            //print("점프 가능");
+            if (Input.GetKeyDown(KeyCode.C))
             {
-
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    rb.AddForce(Vector3.up * jumpPower);
-                }
-
+                rb.AddForce(Vector3.up * jumpPower);
             }
-
         }
-
-
-
-
-
     }
-    private void Sit(float v)
+    /*private void Sit(float v)
     {
         if (v < 0)
         {
@@ -84,15 +96,48 @@ public class JY_Player : MonoBehaviour
             boxCollider.center = new Vector3(0, 0, 0);
             boxCollider.size = new Vector3(1, 2, 1);
         }
-    }
-    public void GetCoin(float coin=1)
+    }*/
+    void InputKey()
     {
-        curCoin += coin;
-        curCoinText.text = "curCoin : " + curCoin;
+        if (state == State.Freeze)
+        {
+            return;
+        }
+
+        h = Input.GetAxis("Horizontal");        // 가로축
+        v = Input.GetAxis("Vertical");          // 세로축
+
+        if (h != 0 || v != 0)
+        {
+            lookVector = new Vector3(h, v).normalized;
+        }
+
+        if (state == State.Idle || state == State.Walk)
+        {
+            Move(h);
+        }
+        else if (state == State.rope)
+        {
+            Move(0, v);
+        }
+
     }
-    
+
+    public void UseItem()
+    {
+        if (curDelayTime > 0) return;
+        if (!item.UseItem(transform.position, lookVector)) item = null;
+        curDelayTime = itemDelay;
+        if (item == null) return;
+        
+        
+    }
     private void OnCollisionEnter(Collision collision)
     {
+        if (state == State.Freeze)
+        {
+            state = State.Idle;
+        }
         if (collision.gameObject.name == "Coin")
         {
             if (collision.gameObject.GetComponent<Coin>().isBig)
@@ -105,14 +150,19 @@ public class JY_Player : MonoBehaviour
             }
             Destroy(collision.gameObject);
         }
-        if (collision.gameObject.tag=="Enemy")
-        { 
-                StartCoroutine(Hit());
-                Destroy(collision.gameObject);
-                return;
+        if (collision.gameObject.tag == "Enemy")
+        {
+            StartCoroutine(Hit());
+            Destroy(collision.gameObject);
+            return;
         }
-
     }
+    public void GetCoin(float coin=1)
+    {
+        curCoin += coin;
+        curCoinText.text = "curCoin : " + curCoin;
+    }
+    
     public IEnumerator Hit()//  피격시 오브젝트 삭제 + 조작 불가 --> 리스폰
     {
         Debug.Log("Hit");

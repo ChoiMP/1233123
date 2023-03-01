@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/JIHO.unity
+- path: Assets/JY/JY.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
